@@ -19,7 +19,6 @@ import { Link } from 'react-router-dom';
                 <div></div>
             );
     }
-
     function RenderComments({comments}) {
         const cmmt = comments.map((comment) => {
             return (
@@ -27,8 +26,8 @@ import { Link } from 'react-router-dom';
                         <p>{comment.comment}</p>
                         <p>
                             -- {comment.author}, {new Intl.DateTimeFormat('en-US', 
-                            { year: 'numeric', month: 'short', day: '2-digit'})
-                                .format(new Date(Date.parse(comment.date)))}
+                                        { year: 'numeric', month: 'short', day: '2-digit'})
+                                        .format(new Date(Date.parse(comment.date)))}
                         </p>
                     </div>
             );
