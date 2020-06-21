@@ -22,8 +22,7 @@ import { Link } from 'react-router-dom';
                 <div></div>
             );
     }
-
-    function RenderComments({comments}) {
+    function RenderComments({comments, addComment, dishId}) {
         const cmmt = comments.map((comment) => {
             return (
                     <div>
@@ -51,8 +50,6 @@ import { Link } from 'react-router-dom';
     const required = (val) => val && val.length;
     const maxLength = (len) => (val) => !(val) || (val.length <= len);
     const minLength = (len) => (val) => val && (val.length >= len);
-    const maxValue = (len) => (val) => !(val) || (val <= len);
-    const minValue = (len) => (val) => val && (val >= len);
 
     class DishDetail extends Component{
         constructor(props){
@@ -74,8 +71,10 @@ import { Link } from 'react-router-dom';
 
         handleSubmit(values) {
             this.toggleModal();
-            console.log('Current State is: ' + JSON.stringify(values));
-            alert('Current State is: ' + JSON.stringify(values));
+            console.log(this.props );
+            console.log(values );
+
+            this.props.addComment(this.props.dish.id, values.rating, values.author, values.comment);
         }
 
         render() {
@@ -97,62 +96,65 @@ import { Link } from 'react-router-dom';
                             <RenderDish dish={this.props.dish} />
                         </div>
                         <div className="col-12 col-md-5 m-1">
-                            <RenderComments comments={this.props.comments} /><br></br>
+                        <RenderComments comments={this.props.comments}
+                                        addComment={this.props.addComment}
+                                        dishId={this.props.dish.id} /><br></br>
+                            
                             <Button outline onClick={this.toggleModal}><span className="fa fa-pencil fa-lg"></span> Submit Comment</Button>
 
                             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                                 <ModalHeader toggle={this.toggleModal}>Comment</ModalHeader>
                                 <ModalBody>
                                     <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
-                                                <Label htmlFor="rating" md={2}>Rating</Label>
-                                                <Col md={12}>
-                                                    <Control.select
-                                                        model=".rating"
-                                                        id=".rating"
-                                                        name=".rating"
-                                                        className="form-control"
-                                                        >
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                    </Control.select>
-                                                </Col>
-                                                <Label htmlFor="username" md={2}>Username</Label>
-                                                <Col md={12}>
-                                                    <Control.text model=".username" id="username" name="username"
-                                                        placeholder="Author"
-                                                        className="form-control"
-                                                        validators={{
-                                                            required, minLength: minLength(3), maxLength: maxLength(15)
-                                                        }}
-                                                        />
-                                                    <Errors
-                                                        className="text-danger"
-                                                        model=".username"
-                                                        show="touched"
-                                                        messages={{
-                                                            required: 'Required',
-                                                            minLength: 'Must be greater than 2 characters',
-                                                            maxLength: 'Must be 15 characters or less'
-                                                        }}
-                                                    />
-                                                </Col>
-                                                <Label htmlFor="message" md={2}>Comment</Label>
-                                                <Col md={12}>
-                                                    <Control.textarea model=".message" id="message" name="message"
-                                                        rows="6"
-                                                        placeholder="Your Comment goes Here"
-                                                        className="form-control" />
-                                                </Col>
-                                            {/* <Button type="submit" value="submit" color="primary">Add</Button> */}
-                                            <br></br>
-                                            <Col md={{size:10, offset: 2}}>
-                                                <Button type="submit" color="primary">
-                                                Add Comment
-                                                </Button>
-                                            </Col>
+                                        <Label htmlFor="rating" md={2}>Rating ( 1-5 )</Label>
+                                        <Col md={12}>
+                                            <Control.select model=".rating"
+                                                id="rating"
+                                                name="rating"
+                                                type="number"
+                                                className="form-control"
+                                                >
+                                                <option>0</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </Control.select>
+                                        </Col>
+                                        <Label htmlFor="author" md={2}>Author</Label>
+                                        <Col md={12}>
+                                            <Control.text model=".author" id="author" name="author"
+                                                placeholder="Author"
+                                                className="form-control"
+                                                validators={{
+                                                    required, minLength: minLength(3), maxLength: maxLength(15)
+                                                }}
+                                                />
+                                            <Errors
+                                                className="text-danger"
+                                                model=".author"
+                                                show="touched"
+                                                messages={{
+                                                    required: 'Required',
+                                                    minLength: 'Must be greater than 2 characters',
+                                                    maxLength: 'Must be 15 characters or less'
+                                                }}
+                                            />
+                                        </Col>
+                                        <Label htmlFor="comment" md={2}>Comment</Label>
+                                        <Col md={12}>
+                                            <Control.textarea model=".comment" id="comment" name="comment"
+                                                rows="6"
+                                                placeholder="Your Comment goes Here"
+                                                className="form-control" />
+                                        </Col>
+                                        <br></br>
+                                        <Col md={{size:10, offset: 2}}>
+                                            <Button type="submit" color="primary">
+                                            Add Comment
+                                            </Button>
+                                        </Col>
                                     </LocalForm>
                                 </ModalBody>
                             </Modal>
