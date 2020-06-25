@@ -3,17 +3,37 @@ import { Card, CardImg, CardText, CardBody,
     CardTitle, Breadcrumb, BreadcrumbItem,Button, Modal, ModalHeader,
      ModalBody, Label, Col, } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
+
 
 import { Link } from 'react-router-dom';
  
     function RenderDish({dish}){
-        if (dish != null)
+        if (dish.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (dish.errMess) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <h4>{dish.errMess}</h4>
+                    </div>
+                </div>
+            );
+        }
+        else if (dish.dish != null)
             return(
                 <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
+                    <CardImg top src={dish.dish.image} alt={dish.dish.name} />
                     <CardBody>
-                      <CardTitle>{dish.name}</CardTitle>
-                      <CardText>{dish.description}</CardText>
+                      <CardTitle>{dish.dish.name}</CardTitle>
+                      <CardText>{dish.dish.description}</CardText>
                     </CardBody>
                 </Card>
             );
@@ -93,15 +113,13 @@ import { Link } from 'react-router-dom';
                         </div>
                     <div className="row">
                         <div className="col-12 col-md-5 m-1">
-                            <RenderDish dish={this.props.dish} />
+                            <RenderDish dish={this.props} />
                         </div>
                         <div className="col-12 col-md-5 m-1">
                         <RenderComments comments={this.props.comments}
                                         addComment={this.props.addComment}
                                         dishId={this.props.dish.id} /><br></br>
-                            
                             <Button outline onClick={this.toggleModal}><span className="fa fa-pencil fa-lg"></span> Submit Comment</Button>
-
                             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                                 <ModalHeader toggle={this.toggleModal}>Comment</ModalHeader>
                                 <ModalBody>
