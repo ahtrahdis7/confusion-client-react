@@ -4,6 +4,7 @@ import { Card, CardImg, CardText, CardBody,
      ModalBody, Label, Col, } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 
 import { Link } from 'react-router-dom';
@@ -30,11 +31,11 @@ import { Link } from 'react-router-dom';
         else if (dish.dish != null)
             return(
                 <Card>
-                    <CardImg top src={dish.dish.image} alt={dish.dish.name} />
-                    <CardBody>
-                      <CardTitle>{dish.dish.name}</CardTitle>
-                      <CardText>{dish.dish.description}</CardText>
-                    </CardBody>
+                <CardImg top src={baseUrl + dish.dish.image} alt={dish.dish.name} />
+                <CardBody>
+                    <CardTitle>{dish.dish.name}</CardTitle>
+                    <CardText>{dish.dish.description}</CardText>
+                </CardBody>
                 </Card>
             );
         else
