@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody,
     CardTitle, Breadcrumb, BreadcrumbItem,Button, Modal, ModalHeader,
      ModalBody, Label, Col, } from 'reactstrap';
-import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Control, Form, Errors } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 
 import { Link } from 'react-router-dom';
@@ -30,13 +31,19 @@ import { Link } from 'react-router-dom';
         }
         else if (dish.dish != null)
             return(
-                <Card>
-                <CardImg top src={baseUrl + dish.dish.image} alt={dish.dish.name} />
-                <CardBody>
-                    <CardTitle>{dish.dish.name}</CardTitle>
-                    <CardText>{dish.dish.description}</CardText>
-                </CardBody>
-                </Card>
+                <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
+                    <Card>
+                        <CardImg top src={baseUrl + dish.dish.image} alt={dish.name} />
+                        <CardBody>
+                            <CardTitle>{dish.name}</CardTitle>
+                            <CardText>{dish.description}</CardText>
+                        </CardBody>
+                    </Card>
+                </FadeTransform>
             );
         else
             return(
@@ -44,24 +51,21 @@ import { Link } from 'react-router-dom';
             );
     }
     function RenderComments({comments, addComment, dishId}) {
-        const cmmt = comments.map((comment) => {
-            return (
-                    <div>
-                        <p>{comment.comment}</p>
-                        <p>
-                            -- {comment.author}, {new Intl.DateTimeFormat('en-US', 
-                                        { year: 'numeric', month: 'short', day: '2-digit'})
-                                        .format(new Date(Date.parse(comment.date)))}
-                        </p>
-                    </div>
-            );
-        });
+
         return (
                 <div>
-                    <h4>Comments</h4>
-                    <p>
-                        {cmmt}
-                    </p>
+                        <Stagger in>
+                        {comments.map((comment) => {
+                            return (
+                                <Fade in>
+                                <li key={comment.id}>
+                                    <p>{comment.comment}</p>
+                                    <p>-- {comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+                                </li>
+                                </Fade>
+                            );
+                        })}
+                        </Stagger>
                 </div>
 
         );
@@ -124,7 +128,7 @@ import { Link } from 'react-router-dom';
                             <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                                 <ModalHeader toggle={this.toggleModal}>Comment</ModalHeader>
                                 <ModalBody>
-                                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                                    <Form onSubmit={(values) => this.handleSubmit(values)}>
                                         <Label htmlFor="rating" md={2}>Rating ( 1-5 )</Label>
                                         <Col md={12}>
                                             <Control.select model=".rating"
@@ -174,7 +178,7 @@ import { Link } from 'react-router-dom';
                                             Add Comment
                                             </Button>
                                         </Col>
-                                    </LocalForm>
+                                    </Form>
                                 </ModalBody>
                             </Modal>
                         </div>
