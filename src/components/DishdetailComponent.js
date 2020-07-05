@@ -84,7 +84,7 @@ import { Link } from 'react-router-dom';
                 isModalOpen: false
             };
             this.toggleModal = this.toggleModal.bind(this);
-            this.handleLogin = this.handleSubmit.bind(this);
+            this.handleSubmit = this.handleSubmit.bind(this);
         }
 
         toggleModal() {
@@ -96,9 +96,6 @@ import { Link } from 'react-router-dom';
 
         handleSubmit(values) {
             this.toggleModal();
-            console.log(this.props );
-            console.log(values );
-
             this.props.addComment(this.props.dish.id, values.rating, values.author, values.comment);
         }
 
